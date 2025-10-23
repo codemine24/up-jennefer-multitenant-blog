@@ -55,7 +55,11 @@ export function BlogTable({ blogs, setBlogs, showAction = true }: BlogTableProps
                     <TableRow key={index}>
                         <TableCell className="font-medium">{index + 1}</TableCell>
                         <TableCell>{blog.title}</TableCell>
-                        <TableCell>{blog.status}</TableCell>
+                        <TableCell>
+                            <span className={`px-2 py-1 text-xs font-medium rounded-full ${blog.status === "Approved" ? "bg-green-900 text-green-100" : blog.status === "Pending" ? "bg-yellow-900 text-yellow-100" : "bg-red-900 text-red-100"}`}>
+                                {blog.status}
+                            </span>
+                        </TableCell>
                         {showAction && <TableCell>
                             {blog.status === "Pending" ? (
                                 <div className="flex gap-2 items-center">

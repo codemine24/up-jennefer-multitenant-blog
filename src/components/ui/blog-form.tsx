@@ -44,7 +44,7 @@ export const BlogForm = ({ onSubmit }: BlogFormProps) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-xl mx-auto w-full">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <Input type="file" placeholder="Image" name="image" onChange={handleChange} />
             <Input placeholder="Title" name="title" value={formData.title} onChange={handleChange} />
             <Textarea placeholder="Description" name="description" value={formData.description} onChange={handleChange} />
