@@ -14,27 +14,28 @@ import { Blog } from "@/app/admin/_components/admin-view";
 interface BlogTableProps {
     blogs: Blog[];
     setBlogs: React.Dispatch<SetStateAction<Blog[]>>;
+    showAction?: boolean;
 }
 
-export function BlogTable({ blogs, setBlogs }: BlogTableProps) {
+export function BlogTable({ blogs, setBlogs, showAction = true }: BlogTableProps) {
 
     const handleApproved = (index: number) => {
         setBlogs(prev => {
-            const updatedBlogs = [...prev]; // Create a shallow copy of the blogs array
+            const updatedBlogs = [...prev];
             const selectedBlog = updatedBlogs[index];
-            selectedBlog.status = "Approved"; // Update the status of the selected blog
-            localStorage.setItem("blogs", JSON.stringify(updatedBlogs)); // Update localStorage with the new array
-            return updatedBlogs; // Return the new array for React to detect the state change
+            selectedBlog.status = "Approved";
+            localStorage.setItem("blogs", JSON.stringify(updatedBlogs));
+            return updatedBlogs;
         });
     };
 
     const handleReject = (index: number) => {
         setBlogs(prev => {
-            const updatedBlogs = [...prev]; // Create a shallow copy of the blogs array
+            const updatedBlogs = [...prev];
             const selectedBlog = updatedBlogs[index];
-            selectedBlog.status = "Rejected"; // Update the status of the selected blog
-            localStorage.setItem("blogs", JSON.stringify(updatedBlogs)); // Update localStorage with the new array
-            return updatedBlogs; // Return the new array for React to detect the state change
+            selectedBlog.status = "Rejected";
+            localStorage.setItem("blogs", JSON.stringify(updatedBlogs));
+            return updatedBlogs;
         });
     };
 
@@ -46,7 +47,7 @@ export function BlogTable({ blogs, setBlogs }: BlogTableProps) {
                     <TableHead className="w-[100px]">ID</TableHead>
                     <TableHead>Title</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead>Actions</TableHead>
+                    {showAction && <TableHead>Actions</TableHead>}
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -55,7 +56,7 @@ export function BlogTable({ blogs, setBlogs }: BlogTableProps) {
                         <TableCell className="font-medium">{index + 1}</TableCell>
                         <TableCell>{blog.title}</TableCell>
                         <TableCell>{blog.status}</TableCell>
-                        <TableCell>
+                        {showAction && <TableCell>
                             {blog.status === "Pending" ? (
                                 <div className="flex gap-2 items-center">
                                     <Button className="bg-green-500" onClick={() => handleApproved(index)}>Approve</Button>
@@ -64,7 +65,7 @@ export function BlogTable({ blogs, setBlogs }: BlogTableProps) {
                             ) : (
                                 <div></div>
                             )}
-                        </TableCell>
+                        </TableCell>}
                     </TableRow>
                 ))}
             </TableBody>
