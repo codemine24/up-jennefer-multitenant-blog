@@ -1,8 +1,9 @@
+import { TableDemo } from "@/components/ui/blog-table";
 
 export default function Home() {
   return (
     <div>
-      hello world
+      <TableDemo />
     </div>
   );
 }
