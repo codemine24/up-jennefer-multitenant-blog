@@ -22,12 +22,18 @@ export default function TenetView() {
     }, []);
 
     const onSubmit = (formData: any) => {
-        const { title, description, image } = formData;
-
         const blogs = localStorage.getItem("blogs") || "[]";
         const parsedBlogs = JSON.parse(blogs);
-        parsedBlogs.push({ title, description, image, status: "Pending" });
+
+        const data = {
+            ...formData,
+            image: formData.image || "https://media.istockphoto.com/id/887987150/photo/blogging-woman-reading-blog.jpg?s=612x612&w=0&k=20&c=7SScR_Y4n7U3k5kBviYm3VwEmW4vmbngDUa0we429GA=",
+            status: "Pending"
+        };
+
+        parsedBlogs.push(data);
         localStorage.setItem("blogs", JSON.stringify(parsedBlogs));
+        setBlogs((prev => [...prev, data]));
         setAddTenant(false);
     };
 
@@ -46,7 +52,7 @@ export default function TenetView() {
                 </div>
             )}
             {addTenant && (
-                <div>
+                <div className="max-w-xl mx-auto w-full">
                     <Button onClick={() => setAddTenant(false)} variant="secondary" className="hover:underline mb-5 pl-0">Back</Button>
                     <BlogForm onSubmit={onSubmit} />
                 </div>
