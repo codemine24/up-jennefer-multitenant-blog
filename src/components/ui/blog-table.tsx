@@ -6,40 +6,38 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
+import { Button } from "./button";
+import { SetStateAction } from "react";
+import { Blog } from "@/app/admin/_components/admin-view";
 
-const blogData = [
-    {
-        id: "BLOG001",
-        title: "Blog 1",
-        status: "Pending",
-        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus nihil aperiam voluptatem amet ad. Aut nostrum nihil vitae recusandae iure. Eveniet hic ut provident ratione ad aspernatur recusandae dolorem deleniti possimus, rerum animi, fugiat quae doloribus id facere deserunt vero, voluptatem qui quasi suscipit ducimus voluptatum illo quis quo. Aliquam fugit error enim, magni vel, animi soluta est obcaecati nisi doloremque eligendi nobis illum sunt suscipit perspiciatis cupiditate incidunt voluptas voluptatibus quae architecto quam. Tempora, soluta? Quidem sapiente recusandae illum, quam facere hic quisquam vero ab ut commodi incidunt animi tempora nesciunt alias natus itaque cum eum dolores nihil nemo.",
-        image: "https://via.placeholder.com/150",
-    },
-    {
-        id: "BLOG002",
-        title: "Blog 2",
-        status: "Approved",
-        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus nihil aperiam voluptatem amet ad. Aut nostrum nihil vitae recusandae iure. Eveniet hic ut provident ratione ad aspernatur recusandae dolorem deleniti possimus, rerum animi, fugiat quae doloribus id facere deserunt vero, voluptatem qui quasi suscipit ducimus voluptatum illo quis quo. Aliquam fugit error enim, magni vel, animi soluta est obcaecati nisi doloremque eligendi nobis illum sunt suscipit perspiciatis cupiditate incidunt voluptas voluptatibus quae architecto quam. Tempora, soluta? Quidem sapiente recusandae illum, quam facere hic quisquam vero ab ut commodi incidunt animi tempora nesciunt alias natus itaque cum eum dolores nihil nemo.",
-        image: "https://via.placeholder.com/150",
-    },
-    {
-        id: "BLOG003",
-        title: "Blog 3",
-        status: "Rejected",
-        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus nihil aperiam voluptatem amet ad. Aut nostrum nihil vitae recusandae iure. Eveniet hic ut provident ratione ad aspernatur recusandae dolorem deleniti possimus, rerum animi, fugiat quae doloribus id facere deserunt vero, voluptatem qui quasi suscipit ducimus voluptatum illo quis quo. Aliquam fugit error enim, magni vel, animi soluta est obcaecati nisi doloremque eligendi nobis illum sunt suscipit perspiciatis cupiditate incidunt voluptas voluptatibus quae architecto quam. Tempora, soluta? Quidem sapiente recusandae illum, quam facere hic quisquam vero ab ut commodi incidunt animi tempora nesciunt alias natus itaque cum eum dolores nihil nemo.",
-        image: "https://via.placeholder.com/150",
-    },
-    {
-        id: "BLOG004",
-        title: "Blog 4",
-        status: "Approved",
-        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus nihil aperiam voluptatem amet ad. Aut nostrum nihil vitae recusandae iure. Eveniet hic ut provident ratione ad aspernatur recusandae dolorem deleniti possimus, rerum animi, fugiat quae doloribus id facere deserunt vero, voluptatem qui quasi suscipit ducimus voluptatum illo quis quo. Aliquam fugit error enim, magni vel, animi soluta est obcaecati nisi doloremque eligendi nobis illum sunt suscipit perspiciatis cupiditate incidunt voluptas voluptatibus quae architecto quam. Tempora, soluta? Quidem sapiente recusandae illum, quam facere hic quisquam vero ab ut commodi incidunt animi tempora nesciunt alias natus itaque cum eum dolores nihil nemo.",
-        image: "https://via.placeholder.com/150",
-    },
-]
+interface BlogTableProps {
+    blogs: Blog[];
+    setBlogs: React.Dispatch<SetStateAction<Blog[]>>;
+}
 
-export function TableDemo() {
+export function BlogTable({ blogs, setBlogs }: BlogTableProps) {
+
+    const handleApproved = (index: number) => {
+        setBlogs(prev => {
+            const updatedBlogs = [...prev]; // Create a shallow copy of the blogs array
+            const selectedBlog = updatedBlogs[index];
+            selectedBlog.status = "Approved"; // Update the status of the selected blog
+            localStorage.setItem("blogs", JSON.stringify(updatedBlogs)); // Update localStorage with the new array
+            return updatedBlogs; // Return the new array for React to detect the state change
+        });
+    };
+
+    const handleReject = (index: number) => {
+        setBlogs(prev => {
+            const updatedBlogs = [...prev]; // Create a shallow copy of the blogs array
+            const selectedBlog = updatedBlogs[index];
+            selectedBlog.status = "Rejected"; // Update the status of the selected blog
+            localStorage.setItem("blogs", JSON.stringify(updatedBlogs)); // Update localStorage with the new array
+            return updatedBlogs; // Return the new array for React to detect the state change
+        });
+    };
+
     return (
         <Table>
             <TableCaption>A list of your recent blogs.</TableCaption>
@@ -48,17 +46,28 @@ export function TableDemo() {
                     <TableHead className="w-[100px]">ID</TableHead>
                     <TableHead>Title</TableHead>
                     <TableHead>Status</TableHead>
+                    <TableHead>Actions</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {blogData.map((blog) => (
-                    <TableRow key={blog.id}>
-                        <TableCell className="font-medium">{blog.id}</TableCell>
+                {blogs.map((blog, index) => (
+                    <TableRow key={index}>
+                        <TableCell className="font-medium">{index + 1}</TableCell>
                         <TableCell>{blog.title}</TableCell>
                         <TableCell>{blog.status}</TableCell>
+                        <TableCell>
+                            {blog.status === "Pending" ? (
+                                <div className="flex gap-2 items-center">
+                                    <Button className="bg-green-500" onClick={() => handleApproved(index)}>Approve</Button>
+                                    <Button className="bg-red-500" onClick={() => handleReject(index)}>Reject</Button>
+                                </div>
+                            ) : (
+                                <div></div>
+                            )}
+                        </TableCell>
                     </TableRow>
                 ))}
             </TableBody>
         </Table>
-    )
+    );
 }
